@@ -1,20 +1,37 @@
 package src
 
 import(
-	//"fmt"
-	//"unicode"
+	"fmt"
+	//"strconv"
 	"strings"
-	"regexp"
+	//"regexp"
 )
 
 func ValidNumber(s string) bool {
-	s = strings.Replace(s, " ", "", -1)//remove speace
-	var valid = regexp.MustCompile(`[a-dA-Df-zF-Z]`)
-	if valid.MatchString(s) {
-		return false
-	}
+	s = strings.Trim(s, " ")
+	fmt.Println(s);
+	var pflag, eflag, numflag = false, false, false;
 	for i:=0; i<len(s); i++ {
-		
+		if('0' <= s[i]&& s[i] <= '9') {
+			numflag = true
+		} else if(s[i] == '.') {
+			if(eflag || pflag) {
+				return false
+			}
+			pflag = true
+		} else if(s[i] == 'e') {
+			if(eflag || !numflag) {
+				return false
+			}
+			numflag = false
+			eflag = true
+		} else if(s[i] == '-' || s[i] == '+') {
+			if(i != 0 && s[i-1] != 'e'){
+				return false
+			}
+		} else {
+			return false
+		}
 	}
-	return true
+	return numflag;
 }
